@@ -1,6 +1,7 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring
+# files.
 
-# dependencies
+# Dependencies & Packages managers
 /node_modules
 /.pnp
 .pnp.*
@@ -8,34 +9,67 @@
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
+!.yarn/sdks
 !.yarn/versions
 
-# testing
+# Testing
 /coverage
+# Local testing
+*.tgz
+/.yalc/
+yalc.lock
 
-# next.js
+# Next.JS
 /.next/
+/analyze/
+next-env.d.ts
+
+# Production
+/build/
 /out/
+/dist/
 
-# production
-/build
-
-# misc
+# Misc
 .DS_Store
+*.bak
+**/tmp
+**/.tmp
+**/temp
+**/.temp
+knip.md
+# Files from the VSCode "SQLTools" extensions.
+*.session.sql
+
+# Secrets
+.env*
 *.pem
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
+# Debug & logs
+**/logs/
+*.log*
+npm-*.log*
+yarn-*.log*
+.pnpm-*.log*
+*.tsbuildinfo*
+vite.config.ts.timestamp*
 
-# env files (can opt-in for committing if needed)
-.env*
+# Vercel
+/.vercel/
 
-# vercel
+# Supabase.
+/supabase/data*.sql
+
+# IDE
+/.idea/
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+/.vscode/**
+# Let's keep the extensions.json file because it references all the recommended
+# extensions for this workspace. That way, newcomers will receive suggestions.
+!.vscode/extensions.json
+# Also keeps this workspace's specific settings file
+!.vscode/settings.json
 .vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+.env*.local

@@ -1,0 +1,132 @@
+{
+	$schema: 'https://docs.renovatebot.com/renovate-schema.json',
+
+	// https://docs.renovatebot.com/configuration-options/#extends
+	extends: [
+		// https://docs.renovatebot.com/presets-config/#configjs-app
+		// This include config:recommended
+		'config:js-app',
+
+		// https://docs.renovatebot.com/presets-default/#enableprecommit
+		':enablePreCommit',
+
+		// https://docs.renovatebot.com/presets-default/#prhourlylimitnone
+		// `config:recommended` sets a default limit of 2 pull requests per
+		// hour.
+		// But we want all dependencies update pull requests to be raised
+		// at once.
+		':prHourlyLimitNone',
+		// https://docs.renovatebot.com/presets-default/#prconcurrentlimitnone
+		// Since `config:recommended` sets a default limit of concurrent open
+		// pull requests to 10, Renovate will not let more than 10 pull requests
+		// open. We don't want that.
+		':prConcurrentLimitNone',
+
+		// Make it possible to use regexes in GitHub Actions workflows in order
+		// to hint Renovate on dependencies from arbitrary strings.
+		// https://docs.renovatebot.com/presets-customManagers/#custommanagersgithubactionsversions
+		'customManagers:githubActionsVersions',
+		// https://docs.renovatebot.com/presets-helpers/#helperspingithubactiondigests
+		'helpers:pinGitHubActionDigests',
+
+		// https://docs.renovatebot.com/presets-default/#semanticcommits
+		// https://docs.renovatebot.com/semantic-commits/#manually-enabling-or-disabling-semantic-commits
+		// Always use semantic commits in the dependencies update pull requests
+		// titles.
+		':semanticCommits',
+
+		// https://docs.renovatebot.com/presets-default/#labelarg0
+		// Add "deps" label to all pull requests created by Renovate.
+		':label(deps)',
+
+		// https://docs.renovatebot.com/presets-default/#automergepr
+		':automergePr',
+		// https://docs.renovatebot.com/presets-default/#automergerequireallstatuschecks
+		':automergeRequireAllStatusChecks',
+		// https://docs.renovatebot.com/presets-default/#automergepatch
+		':automergePatch',
+		// https://docs.renovatebot.com/presets-default/#automergelinters
+		':automergeLinters',
+		// https://docs.renovatebot.com/presets-default/#automergetypes
+		':automergeTypes',
+
+		// https://docs.renovatebot.com/presets-npm/#npmunpublishsafe
+		'npm:unpublishSafe',
+
+		// https://docs.renovatebot.com/presets-default/#npm
+		// Uncomment this to have automatic NPM dependencies updates.
+		// ':npm',
+
+		// https://docs.renovatebot.com/presets-workarounds/#workaroundstypesnodeversioning
+		'workarounds:typesNodeVersioning',
+	],
+
+	// https://docs.renovatebot.com/configuration-options/#packagerules
+	packageRules: [
+		// Labels to add based on the type of dependencies.
+		{
+			matchPackagePatterns: ['*'],
+			semanticCommitType: 'chore',
+		},
+		{
+			matchDepTypes: ['dependencies', 'require'],
+			semanticCommitType: 'deps',
+			semanticCommitScope: null,
+		},
+		{
+			matchDepTypes: ['dev', 'devDependencies'],
+			labels: ['dev-deps'],
+			semanticCommitType: 'dev-deps',
+			semanticCommitScope: null,
+		},
+		{
+			matchLanguages: ['javascript'],
+			addLabels: ['javascript'],
+		},
+		{
+			matchManagers: ['github-actions'],
+			addLabels: ['github-actions'],
+		},
+
+		// Do not group semantic-release monorepo updates to avoid the immortal PR.
+		{
+			extends: 'monorepo:semantic-release',
+			groupName: null,
+		},
+	],
+
+	// https://docs.renovatebot.com/configuration-options/#regexmanagers
+	// Define custom regexes that we can use to hint Renovate on dependencies from
+	// arbitrary strings. Those regexes are tested in the `tests` directory, so
+	// any update or new regex should be accompanied by tests. If you have a need
+	// for a new custom regex, you can raise an issue in the repository and detail
+	// your use case. If you want to update an existing one, feel free to make a
+	// pull request, but make sure to clearly explain the changes, and describe
+	// why you think they are relevant.
+	customManagers: [
+		{
+			description: 'Update dependencies in YAML files',
+			fileMatch: ['^.+\\.ya?ml$'],
+			matchStrings: [
+				'\\s*: ("|\')?(?<currentValue>.+?)("|\')?[[:blank:]]+#[[:blank:]]*renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?)(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z\\d-]+?))?\\s',
+			],
+			versioningTemplate: '{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}',
+		},
+		{
+			description: 'Update dependencies in Bash files',
+			fileMatch: ['^.+\\.sh$'],
+			matchStrings: [
+				'# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>[^\\s]+?)(?: (lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[a-z-0-9]+?))?\\s.+?="?(?<currentValue>.+?)"?\\s',
+			],
+			versioningTemplate: '{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}',
+		},
+		{
+			description: 'Update Python PEP 440 PyPI dependencies in YAML files',
+			fileMatch: ['^.+\\.ya?ml$'],
+			matchStrings: [
+				'("|\')(?<depName>[\\w-]+)(?<currentValue>.+?)("|\'),?[[:blank:]]+#[[:blank:]]*renovate: python-pep440-dependency\\s',
+			],
+			datasourceTemplate: 'pypi',
+		},
+	],
+}

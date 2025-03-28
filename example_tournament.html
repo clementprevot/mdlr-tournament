@@ -1,0 +1,972 @@
+<html>
+	<head>
+		<link
+			rel="preconnect"
+			href="https://fonts.googleapis.com"
+		/>
+		<link
+			rel="preconnect"
+			href="https://fonts.gstatic.com"
+			crossorigin
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+			rel="stylesheet"
+		/>
+
+		<script
+			src="https://kit.fontawesome.com/349b7ae733.js"
+			crossorigin="anonymous"
+		></script>
+
+		<script src="leader-line.min.js"></script>
+
+		<style>
+			body {
+				font-family: 'Press Start 2P', serif;
+				font-weight: 400;
+				font-style: normal;
+				background-color: #38195c;
+
+				display: flex;
+				gap: 20px;
+				min-height: 100vh;
+				margin: 0;
+				padding: 0;
+			}
+
+			.background {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				opacity: 0.5;
+				background-image: url(./images/background.svg);
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
+				z-index: -1;
+			}
+
+			div {
+				box-sizing: content-box;
+			}
+
+			.sidebar {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 20px;
+				padding: 20px;
+				width: 290px;
+			}
+			.sidebar.right {
+				width: 0;
+			}
+
+			.spectate .sidebar {
+				width: 0;
+			}
+
+			.spectate #logo {
+				position: absolute;
+				bottom: 28%;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+
+			.buttons {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 20px;
+				width: 100%;
+			}
+
+			.spectate .buttons {
+				display: none;
+			}
+
+			.bracket {
+				flex: 1;
+				display: flex;
+				justify-content: space-between;
+				align-items: stretch;
+				padding: 20px;
+				overflow-y: auto;
+				gap: 60px;
+			}
+
+			.round {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-around;
+				width: fit-content;
+				padding-top: 20px;
+				padding-bottom: 20px;
+				position: relative;
+			}
+
+			.eighth::after {
+				content: '';
+				height: calc(100% - 80px);
+				width: 3px;
+				background-color: #ea4592;
+				position: absolute;
+				top: 0;
+				transform: translateY(40px);
+			}
+
+			.quarter::after {
+				content: '';
+				height: 70%;
+				width: 3px;
+				background-color: #ea4592;
+				position: absolute;
+				top: 0;
+				transform: translateY(calc(30% - 80px));
+			}
+
+			.eighth.left::after,
+			.quarter.left::after {
+				right: -20px;
+			}
+			.eighth.right::after,
+			.quarter.right::after {
+				left: -20px;
+			}
+
+			.semi::after {
+				content: '';
+				width: calc(100% + 55px);
+				height: 3px;
+				background-color: #ea4592;
+				position: absolute;
+				top: 50%;
+				transform: translateY(-130px);
+				left: -20px;
+			}
+			.semi.right::after {
+				left: -35px;
+			}
+
+			#semi-arrow-start {
+				position: absolute;
+				top: 50%;
+				left: calc(50% + 145px);
+				transform: translateX(-50%) translateY(-126px);
+			}
+
+			.spectate #semi-arrow-start {
+				left: 50%;
+			}
+
+			.final {
+				padding: 20px;
+				border: 3px solid #ea4592;
+			}
+
+			.final {
+				position: absolute;
+				top: 80px;
+				left: calc(50% + 145px);
+				transform: translateX(-50%);
+			}
+			.final::after {
+				content: 'FINALE';
+				position: absolute;
+				font-size: x-large;
+				bottom: -40px;
+				left: 50%;
+				transform: translateX(-50%);
+				color: #ea4592;
+			}
+
+			.spectate .final {
+				left: 50%;
+			}
+			.spectate .final::after {
+				left: 50%;
+			}
+
+			.match {
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+				width: 100%;
+			}
+
+			.match {
+				position: relative;
+			}
+
+			.started .startButton {
+				display: none;
+			}
+
+			.started .stopButton {
+				display: block;
+			}
+
+			.started .clearButton {
+				display: none;
+			}
+
+			.stopButton {
+				display: none;
+			}
+
+			.player {
+				width: 100%;
+				min-height: 46px;
+				min-width: 250px;
+				background-color: #fff;
+				padding: 10px 20px;
+				display: flex;
+				gap: 20px;
+				align-items: center;
+				box-sizing: border-box;
+			}
+
+			.started .player {
+				cursor: pointer;
+			}
+
+			.player.winner {
+				background-color: #ea4592;
+			}
+
+			.player .fa-trophy {
+				display: none;
+				color: white;
+				position: relative;
+				font-size: 20px;
+			}
+
+			.player .fa-user {
+				font-size: 20px;
+			}
+
+			.player .fa-trophy::after {
+				position: absolute;
+				content: attr(data-position);
+				font-family: 'Press Start 2P', serif;
+				font-size: 10px;
+				color: black;
+				top: 50%;
+				left: 50%;
+				transform: translate(-45%, -90%);
+			}
+
+			/* La position en blanc uniquement pour la finale */
+			.final .player .fa-trophy::after {
+				color: white;
+			}
+
+			.player.winner .fa-user {
+				display: none;
+			}
+			.player.winner .fa-trophy {
+				display: block;
+			}
+
+			.player .name {
+				min-width: 0;
+				flex: 1;
+				padding: 5px;
+				min-height: 14px;
+				white-space: nowrap;
+			}
+
+			.started .player .name {
+				cursor: pointer;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				user-select: none;
+			}
+
+			.started .player .name:focus {
+				outline: none;
+			}
+
+			.started .player .name[contenteditable] {
+				-webkit-user-modify: read-only;
+				-moz-user-modify: read-only;
+			}
+
+			button:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+
+			.final .player.winner[data-position='1'] {
+				background-color: #ffd700; /* Or */
+			}
+
+			.final .player.winner[data-position='2'] {
+				background-color: #c0c0c0; /* Argent */
+			}
+
+			.final .player.winner[data-position='3'] {
+				background-color: #cd7f32; /* Bronze */
+			}
+
+			.final .player.winner[data-position='1'] .fa-trophy {
+				color: #806000; /* Or foncé */
+			}
+
+			.final .player.winner[data-position='2'] .fa-trophy {
+				color: #707070; /* Argent foncé */
+			}
+
+			.final .player.winner[data-position='3'] .fa-trophy {
+				color: #804020; /* Bronze foncé */
+			}
+
+			.mario-kart {
+				position: absolute;
+				bottom: 0;
+				left: calc(50% + 145px);
+				transform: translateX(-50%);
+				max-width: 300px;
+				width: 20vh;
+			}
+
+			.spectate .mario-kart {
+				left: 50%;
+			}
+		</style>
+
+		<script>
+			function selectElementContents(el) {
+				var range = document.createRange()
+				range.selectNodeContents(el)
+				var sel = window.getSelection()
+				sel.removeAllRanges()
+				sel.addRange(range)
+			}
+
+			const canStartTournament = () => {
+				// Check if there's at least one player with a name
+				return tournament.rounds[0].matches.some((match) =>
+					match.players.some((player) => player.name !== ''),
+				)
+			}
+
+			const onPlayerNameBlur = (nameElement, playerElement) => {
+				// Find the player in our data structure
+				const matchElement = playerElement.closest('.match')
+				const roundElement = matchElement.closest('.round')
+				const roundClasses = roundElement.classList
+
+				// Determine round index
+				let roundIndex
+				if (roundClasses.contains('eighth')) roundIndex = 0
+				else if (roundClasses.contains('quarter')) roundIndex = 1
+				else if (roundClasses.contains('semi')) roundIndex = 2
+				else if (roundClasses.contains('final')) roundIndex = 3
+
+				// Find match and player indexes
+				const matchElements = roundElement.querySelectorAll('.match')
+				const matchIndex =
+					Array.from(matchElements).indexOf(matchElement)
+				const playerElements = matchElement.querySelectorAll('.player')
+				const playerIndex =
+					Array.from(playerElements).indexOf(playerElement)
+
+				// Get the match from our data structure
+				let match
+				if (roundClasses.contains('left')) {
+					match = tournament.rounds[roundIndex].matches[matchIndex]
+				} else if (roundClasses.contains('right')) {
+					const totalMatches =
+						tournament.rounds[roundIndex].matches.length / 2 // Divise par 2 car on ne compte que les matches d'un côté
+					match =
+						tournament.rounds[roundIndex].matches[
+							totalMatches + matchIndex
+						]
+				} else {
+					match = tournament.rounds[roundIndex].matches[0]
+				}
+
+				// Update player name
+				match.players[playerIndex].name = nameElement.textContent
+
+				saveTournamentState()
+				renderTournament()
+			}
+
+			const onPlayerNameInput = (nameElement, player) => {
+				// Update player name directly in the data structure
+				player.name = nameElement.textContent
+			}
+
+			const updateStartButton = () => {
+				const startButton = document.querySelector('.startButton')
+				startButton.disabled = !canStartTournament()
+				startButton.title = canStartTournament()
+					? ''
+					: 'Add at least 1 player to start the tournament'
+			}
+
+			const onPlayerNameFocus = (nameElement, playerElement) => {
+				// Don't allow editing if tournament is started
+				if (document.body.classList.contains('started')) {
+					nameElement.blur()
+					return
+				}
+
+				selectElementContents(nameElement)
+			}
+
+			const onPlayerNameKeyDown = (nameElement, playerElement, event) => {
+				if (event.key === 'Enter') {
+					event.preventDefault()
+					nameElement.blur()
+				}
+			}
+
+			const onPlayerClick = (playerElement) => {
+				if (!document.body.classList.contains('started')) return false
+				if (playerElement.querySelector('.name').textContent === '')
+					return false
+
+				// Find the player in our data structure
+				const matchElement = playerElement.closest('.match')
+				const roundElement = matchElement.closest('.round')
+				const roundClasses = roundElement.classList
+
+				// Determine round index
+				let roundIndex
+				if (roundClasses.contains('eighth')) roundIndex = 0
+				else if (roundClasses.contains('quarter')) roundIndex = 1
+				else if (roundClasses.contains('semi')) roundIndex = 2
+				else if (roundClasses.contains('final')) roundIndex = 3
+
+				// Find match and player indexes
+				const matchElements = roundElement.querySelectorAll('.match')
+				const matchIndex =
+					Array.from(matchElements).indexOf(matchElement)
+				const playerElements = matchElement.querySelectorAll('.player')
+				const playerIndex =
+					Array.from(playerElements).indexOf(playerElement)
+
+				// Get the match from our data structure
+				let actualMatchIndex = matchIndex
+				if (roundClasses.contains('right')) {
+					// Adjust matchIndex for right side matches
+					const totalMatches =
+						tournament.rounds[roundIndex].matches.length / 2
+					actualMatchIndex = totalMatches + matchIndex
+				} else if (roundClasses.contains('final')) {
+					// Final match
+					actualMatchIndex = 0
+				}
+
+				const match =
+					tournament.rounds[roundIndex].matches[actualMatchIndex]
+
+				const player = match.players[playerIndex]
+
+				if (player.isWinner) {
+					// Remove winner status
+					player.isWinner = false
+					player.winTime = null
+					player.position = null
+
+					// Recalculate positions for remaining winners
+					const remainingWinners = match.players
+						.filter((p) => p.isWinner)
+						.sort((a, b) => a.winTime - b.winTime)
+
+					// Reset positions based on selection time
+					remainingWinners.forEach((winner, index) => {
+						winner.position = index
+					})
+				} else {
+					// Check if there are already max winners
+					const winners = match.players.filter((p) => p.isWinner)
+					const maxWinners = roundIndex === 3 ? 3 : 2 // 3 winners for final, 2 for other rounds
+					if (winners.length >= maxWinners) return
+
+					// Set winner status with position
+					player.isWinner = true
+					player.winTime = Date.now()
+					player.position = winners.length // 0 for first, 1 for second, 2 for third
+				}
+
+				saveTournamentState()
+				renderTournament()
+				if (roundIndex < tournament.rounds.length - 1) {
+					updateNextRound(roundIndex, actualMatchIndex)
+				}
+			}
+
+			const updateNextRound = (roundIndex, matchIndex) => {
+				if (roundIndex >= tournament.rounds.length - 1) return
+
+				const currentMatch =
+					tournament.rounds[roundIndex].matches[matchIndex]
+
+				// Get current winners sorted by selection time
+				const winners = currentMatch.players
+					.filter((p) => p.isWinner)
+					.sort((a, b) => a.winTime - b.winTime)
+
+				// Get the target match in next round
+				const nextRound = tournament.rounds[roundIndex + 1]
+				const totalNextMatches = nextRound.matches.length
+
+				// First, remove all players from current match that are in any next round match
+				currentMatch.players.forEach((player) => {
+					nextRound.matches.forEach((match) => {
+						const playerIndex = match.players.findIndex(
+							(p) => p.name === player.name,
+						)
+						if (playerIndex !== -1) {
+							match.players[playerIndex] = {
+								name: '',
+								isWinner: false,
+								winTime: null,
+								position: null,
+							}
+						}
+					})
+				})
+
+				// Then place the winners in their respective matches
+				winners.forEach((winner) => {
+					let targetMatchIndex
+
+					if (winner.position === 0) {
+						// First winners go in order: 0->0, 1->1, 2->2, 3->3, 4->0, 5->1, etc.
+						targetMatchIndex = matchIndex % totalNextMatches
+					} else {
+						// Second winners go in reverse order: 0->3, 1->2, 2->1, 3->0, 4->3, 5->2, etc.
+						targetMatchIndex =
+							totalNextMatches -
+							1 -
+							(matchIndex % totalNextMatches)
+					}
+
+					const targetMatch = nextRound.matches[targetMatchIndex]
+					const emptySpot = targetMatch.players.findIndex(
+						(p) => p.name === '',
+					)
+					if (emptySpot !== -1) {
+						targetMatch.players[emptySpot] = {
+							name: winner.name,
+							isWinner: false,
+							winTime: null,
+							position: null,
+						}
+					}
+				})
+
+				saveTournamentState()
+				renderTournament()
+			}
+
+			// Tournament data structure
+			const tournament = {
+				isStarted: false, // Add tournament start state
+				rounds: [
+					{
+						// First round: 8 matches of 4 players
+						matches: Array(8)
+							.fill()
+							.map(() => ({
+								players: Array(4)
+									.fill()
+									.map(() => ({
+										name: '',
+										isWinner: false,
+										winTime: null,
+										position: null, // Position when selected as winner (0 or 1)
+									})),
+							})),
+					},
+					{
+						// Second round: 4 matches of 4 players
+						matches: Array(4)
+							.fill()
+							.map(() => ({
+								players: Array(4)
+									.fill()
+									.map(() => ({
+										name: '',
+										isWinner: false,
+										winTime: null,
+										position: null,
+									})),
+							})),
+					},
+					{
+						// Semi-finals: 2 matches of 4 players
+						matches: Array(2)
+							.fill()
+							.map(() => ({
+								players: Array(4)
+									.fill()
+									.map(() => ({
+										name: '',
+										isWinner: false,
+										winTime: null,
+										position: null,
+									})),
+							})),
+					},
+					{
+						// Final: 1 match of 4 players
+						matches: Array(1)
+							.fill()
+							.map(() => ({
+								players: Array(4)
+									.fill()
+									.map(() => ({
+										name: '',
+										isWinner: false,
+										winTime: null,
+										position: null,
+									})),
+							})),
+					},
+				],
+			}
+
+			let arrow
+
+			const clearBracket = () => {
+				// Reset tournament state
+				tournament.rounds.forEach((round) => {
+					round.matches.forEach((match) => {
+						match.players.forEach((player) => {
+							player.name = ''
+							player.isWinner = false
+							player.winTime = null
+							player.position = null
+						})
+					})
+				})
+
+				saveTournamentState()
+				renderTournament()
+			}
+
+			const createTestBracket = () => {
+				clearBracket()
+
+				// Fill first round with test players (32 players total)
+				tournament.rounds[0].matches.forEach((match, matchIndex) => {
+					match.players.forEach((player, playerIndex) => {
+						const playerNumber = matchIndex * 4 + playerIndex + 1
+						player.name = `Player ${playerNumber}`
+					})
+				})
+
+				saveTournamentState()
+				renderTournament()
+			}
+
+			const renderTournament = () => {
+				const bracket = document.querySelector('.bracket')
+				bracket.innerHTML = ''
+
+				// Create columns for each round
+				const rounds = [
+					createRound(
+						'eighth left',
+						tournament.rounds[0].matches.slice(0, 4),
+						1,
+					),
+					createRound(
+						'quarter left',
+						tournament.rounds[1].matches.slice(0, 2),
+						2,
+					),
+					createRound(
+						'semi left',
+						[tournament.rounds[2].matches[0]],
+						3,
+					),
+					createRound(
+						'final',
+						[tournament.rounds[3].matches[0]],
+						'floating',
+						'final',
+					),
+					createRound(
+						'semi right',
+						[tournament.rounds[2].matches[1]],
+						5,
+					),
+					createRound(
+						'quarter right',
+						tournament.rounds[1].matches.slice(2),
+						6,
+					),
+					createRound(
+						'eighth right',
+						tournament.rounds[0].matches.slice(4),
+						7,
+					),
+				]
+
+				rounds.forEach((round) => bracket.appendChild(round))
+
+				const semiArrowStart = document.createElement('div')
+				semiArrowStart.id = 'semi-arrow-start'
+				bracket.appendChild(semiArrowStart)
+
+				arrow =
+					arrow === undefined
+						? new LeaderLine(
+								document.getElementById('semi-arrow-start'),
+								LeaderLine.pointAnchor(
+									document.getElementById('final'),
+									{
+										y: '115%',
+									},
+								),
+								{ color: '#ea4592', size: 4, path: 'straight' },
+							)
+						: arrow
+
+				// Set positions on winner icons after elements are in DOM
+				document.querySelectorAll('.winner-icon').forEach((icon) => {
+					const matchElement = icon.closest('.match')
+					const round = matchElement.closest('.round')
+					const roundClasses = round.classList
+
+					let roundIndex
+					if (roundClasses.contains('eighth')) roundIndex = 0
+					else if (roundClasses.contains('quarter')) roundIndex = 1
+					else if (roundClasses.contains('semi')) roundIndex = 2
+					else if (roundClasses.contains('final')) roundIndex = 3
+
+					if (tournament.rounds[roundIndex]) {
+						const player = tournament.rounds[roundIndex].matches
+							.flatMap((m) => m.players)
+							.find(
+								(p) =>
+									p.name ===
+									icon.nextElementSibling.textContent,
+							)
+
+						if (player && player.isWinner) {
+							// Toujours afficher la position réelle (position + 1)
+							icon.dataset.position = player.position + 1
+						}
+					}
+				})
+
+				updateStartButton()
+			}
+
+			const createRound = (className, matches, order, id) => {
+				const round = document.createElement('div')
+				round.classList.add('round', ...className.split(' '))
+				if (typeof order === 'number') {
+					round.style.order = order
+				}
+				if (id) {
+					round.id = id
+				}
+
+				matches.forEach((match) => {
+					round.appendChild(createMatch(match))
+				})
+
+				return round
+			}
+
+			const createMatch = (match) => {
+				const matchElement = document.createElement('div')
+				matchElement.classList.add('match')
+
+				match.players.forEach((player) => {
+					matchElement.appendChild(createPlayer(player))
+				})
+
+				return matchElement
+			}
+
+			const createPlayer = (player) => {
+				const playerElement = document.createElement('div')
+				playerElement.classList.add('player')
+				if (player.isWinner) {
+					playerElement.classList.add('winner')
+					playerElement.dataset.position = player.position + 1
+				}
+
+				const icon = document.createElement('i')
+				icon.classList.add(
+					'fa-solid',
+					player.isWinner ? 'fa-trophy' : 'fa-user',
+				)
+				if (player.isWinner) {
+					// On mettra la position plus tard dans renderTournament
+					icon.classList.add('winner-icon')
+				}
+				playerElement.appendChild(icon)
+
+				const nameElement = document.createElement('div')
+				nameElement.classList.add('name')
+				nameElement.textContent = player.name
+				nameElement.contentEditable = !tournament.isStarted
+				playerElement.appendChild(nameElement)
+
+				const handleClick = () => {
+					if (tournament.isStarted) {
+						onPlayerClick(playerElement)
+					}
+				}
+
+				// Add click handlers
+				playerElement.addEventListener('click', handleClick)
+				nameElement.addEventListener('click', (e) => {
+					if (!tournament.isStarted) {
+						e.stopPropagation()
+					}
+				})
+
+				// Add edit handlers
+				nameElement.addEventListener('focus', (e) => {
+					if (!tournament.isStarted) {
+						onPlayerNameFocus(nameElement, playerElement)
+					}
+				})
+				nameElement.addEventListener('blur', (e) => {
+					if (!tournament.isStarted) {
+						onPlayerNameBlur(nameElement, playerElement)
+					}
+				})
+				nameElement.addEventListener('keydown', (e) => {
+					if (!tournament.isStarted) {
+						onPlayerNameKeyDown(nameElement, playerElement, e)
+					}
+				})
+
+				return playerElement
+			}
+
+			const startTournament = () => {
+				if (!canStartTournament()) return
+				tournament.isStarted = true
+				document.body.classList.add('started')
+				saveTournamentState()
+			}
+
+			const stopTournament = () => {
+				tournament.isStarted = false
+				document.body.classList.remove('started')
+				saveTournamentState()
+			}
+
+			const saveTournamentState = () => {
+				localStorage.setItem('tournament', JSON.stringify(tournament))
+			}
+
+			const restoreTournamentState = () => {
+				const saved = localStorage.getItem('tournament')
+				if (saved) {
+					try {
+						Object.assign(tournament, JSON.parse(saved))
+						// Restore started state from data
+						if (tournament.isStarted) {
+							document.body.classList.add('started')
+						} else {
+							document.body.classList.remove('started')
+						}
+					} catch {
+						// Overwrite the wrongly formatted tournament with the empty one
+						saveTournamentState()
+					}
+				}
+
+				renderTournament()
+			}
+
+			// Listen for changes in other tabs
+			window.addEventListener('storage', (e) => {
+				if (e.key === 'tournament') {
+					try {
+						const newTournament = JSON.parse(e.newValue)
+						Object.assign(tournament, newTournament)
+
+						// Update started state
+						if (tournament.isStarted) {
+							document.body.classList.add('started')
+						} else {
+							document.body.classList.remove('started')
+						}
+
+						renderTournament()
+					} catch (error) {
+						console.error('Error parsing tournament data:', error)
+					}
+				}
+			})
+
+			document.addEventListener('DOMContentLoaded', () => {
+				// Hide buttons if URL contains "spectate"
+				if (window.location.href.includes('spectate')) {
+					document.querySelector('body').classList.add('spectate')
+				}
+
+				restoreTournamentState()
+			})
+		</script>
+	</head>
+
+	<body>
+		<div class="background"></div>
+
+		<div class="sidebar">
+			<img
+				src="./images/logo.png"
+				alt="Mate Dans le Rétro... Gaming"
+				width="250px"
+				id="logo"
+			/>
+
+			<div class="buttons">
+				<button
+					onClick="startTournament()"
+					class="startButton"
+				>
+					Start tournament
+				</button>
+				<button
+					onClick="stopTournament()"
+					class="stopButton"
+				>
+					Stop tournament
+				</button>
+				<button
+					onClick="clearBracket()"
+					class="clearButton"
+				>
+					Clear bracket
+				</button>
+				<button
+					onClick="createTestBracket()"
+					class="clearButton"
+				>
+					Set test bracket
+				</button>
+			</div>
+		</div>
+
+		<div class="bracket"></div>
+
+		<div class="sidebar right"></div>
+
+		<img
+			src="./images/mario_kart.png"
+			alt="Mario Kart Wii"
+			class="mario-kart"
+		/>
+	</body>
+</html>

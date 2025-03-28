@@ -1,0 +1,101 @@
+{
+	"[dotenv]": {
+		"editor.defaultFormatter": "foxundermoon.shell-format"
+	},
+	"[json5]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[markdown]": {
+		"editor.rulers": [80],
+		"editor.wordWrapColumn": 80,
+		"files.trimTrailingWhitespace": false,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[mdx]": {
+		"files.trimTrailingWhitespace": false,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[shellscript]": {
+		"editor.defaultFormatter": "foxundermoon.shell-format"
+	},
+	"css.validate": false,
+	"editor.codeActionsOnSave": [
+		"source.organizeLinkDefinitions",
+		"source.addMissingImports.ts",
+		"source.removeUnusedImports",
+		"source.fixAll.oxc",
+		"source.fixAll.markdownlint",
+		"source.fixAll.shellcheck",
+		"source.fixAll.ts",
+		"source.fixAll.sortJSON",
+		"source.formatDocument"
+	],
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.detectIndentation": false,
+	"editor.formatOnPaste": true,
+	"editor.formatOnSave": false,
+	"editor.formatOnType": true,
+	"editor.insertSpaces": false,
+	"editor.quickSuggestions": {
+		"comments": false,
+		"other": true,
+		"strings": true
+	},
+	"editor.tabSize": 4,
+	"files.insertFinalNewline": true,
+	"files.trimFinalNewlines": true,
+	"files.trimTrailingWhitespace": true,
+	"javascript.format.enable": false,
+	"javascript.validate.enable": false,
+	"less.validate": false,
+	"markdownlint.config": {
+		"MD001": false,
+		"MD013": false,
+		"MD025": false,
+		"MD028": false,
+		"MD029": false,
+		"MD033": false,
+		"default": true
+	},
+	"oxc.enable": true,
+	"scss.validate": false,
+	"search.exclude": {
+		"**/*-snapshots": true,
+		"**/.yarn": true,
+		"**/build": true,
+		"**/dist": true,
+		"**/node_modules": true,
+		"**/out": true,
+		"**/storybook-static": true
+	},
+	"tailwindCSS.experimental.classRegex": [
+		[
+			"(?:\\b(?:const|let|var)\\s+)?[\\w$_]*(?:[Ss]tyles?|[Cc]lasses?|[Cc]lass[nN]ames?)[\\w\\d]*\\s*(?:=|\\+=)\\s*['\"]([^'\"]*)['\"]"
+		],
+		[
+			"(?:[Ss]tyles?|[Cc]lasses?|[Cc]lass[nN]ames?)\\s*(?::\\s*[^=]+)?\\s*=\\s*([^;]*);",
+			"['\"`]([^'\"`]*)['\"`]"
+		],
+		[
+			"classList.(?:add|remove)\\(([^)]*)\\)",
+			"(?:'|\"|`)([^\"'`]*)(?:'|\"|`)"
+		],
+		[
+			"(?:twMerge|twJoin|cn|cj|classnames)\\(([^)]*)\\)",
+			"[\"'`]([^\"'`]*)[\"'`]"
+		],
+		["clsx\\(.*?\\)(?!\\])", "(?:'|\"|`)([^\"'`]*)(?:'|\"|`)"],
+		"return '(.*)'",
+		["return \\(?{([\\s\\S]+?)}\\(?\\s", "'([^']*)'"]
+	],
+	"tailwindCSS.rootFontSize": 8,
+	"typescript.format.enable": false,
+	"typescript.preferences.quoteStyle": "single",
+	"typescript.tsdk": "./node_modules/typescript/lib"
+}

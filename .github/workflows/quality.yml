@@ -1,0 +1,70 @@
+# This is a Github Workflow that runs lint, formatter and unit tests on every
+# push and pull request.
+
+name: Quality
+
+on:
+    pull_request:
+        branches:
+            - main
+            - prod
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    quality:
+        name: Checking code quality
+
+        if: github.actor != 'renovate[bot]'
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Get updated frontend code files
+              id: changed-files-specific
+              uses: tj-actions/changed-files@v46
+              with:
+                  files_yaml: |
+                      javascript:
+                        - '**/*.js'
+                        - '**/*.jsx'
+                      typescript:
+                        - '**/*.ts'
+                        - '**/*.tsx'
+                      other:
+                        - '!**/.husky'
+                        - '!**/.vercel'
+                        - '!**/.vscode'
+                        - '**/*.json'
+                        - '**/*.html'
+                      dependencies:
+                        - '*.lock'
+
+            - if: steps.changed-files-specific.outputs.javascript_any_changed != 'true' && steps.changed-files-specific.outputs.typescript_any_changed != 'true' && steps.changed-files-specific.outputs.other_any_changed != 'true' && steps.changed-files-specific.outputs.dependencies_any_changed != 'true'
+              name: No need to check code quality
+              run: |
+                  echo "There are no updates of meaningfull code."
+                  echo "SKIP_QUALITY_CHECK=1" >> $GITHUB_ENV
+
+            - if: env.SKIP_QUALITY_CHECK != 1
+              uses: actions/checkout@v4
+
+            - if: env.SKIP_QUALITY_CHECK != 1
+              uses: actions/setup-node@v4
+              with:
+                  cache: pnpm
+                  node-version: 22.x
+
+            - if: env.SKIP_QUALITY_CHECK != 1
+              name: Setting up dependencies & workspaces
+              run: pnpm install && pnpm run setup
+
+            - if: env.SKIP_QUALITY_CHECK != 1
+              name: Checking linter
+              run: pnpm run lint
+
+            - if: env.SKIP_QUALITY_CHECK != 1
+              name: Checking format
+              run: pnpm run format
