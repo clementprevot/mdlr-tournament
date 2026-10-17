@@ -152,10 +152,10 @@ importers:
         version: 0.6.11(prettier-plugin-organize-attributes@1.0.0(prettier@3.5.3))(prettier@3.5.3)
       supabase:
         specifier: ^2.20.5
-        version: 2.20.5
+        version: 2.20.5(supports-color@8.1.1)
       supazod:
         specifier: ^1.2.3
-        version: 1.2.3
+        version: 1.2.3(supports-color@8.1.1)
       typescript:
         specifier: ^5
         version: 5.8.2
@@ -1040,6 +1040,7 @@ packages:
 
   '@vercel/flags@3.1.1':
     resolution: {integrity: sha512-JM0xXRCHvN5wiSr9C2u6PSbXMnqN/0IXyNEOob6UYWB70vBWVLUKM96wgSuj6orRzRTowItmja2RTYyRvVhuQg==}
+    deprecated: This package has been renamed to flags. It offers the same functionality under a new name. Please follow the upgrade guide https://github.com/vercel/flags/blob/main/packages/flags/guides/upgrade-to-v4.md
     peerDependencies:
       '@opentelemetry/api': ^1.7.0
       '@sveltejs/kit': '*'
@@ -1727,6 +1728,7 @@ packages:
   next@15.2.4:
     resolution: {integrity: sha512-VwL+LAaPSxEkd3lU2xWbgEOtrM8oedmyhBqaVNmgKB+GvZlCy9rgaEc+y2on0wv+l0oSFqLtYD6dcC1eAedUaQ==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
+    deprecated: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/CVE-2025-66478 for more details.
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
@@ -2246,8 +2248,8 @@ packages:
     resolution: {integrity: sha512-tEYNll18pPKHroYSmLLrksq233j021G0giwW7P3D24jC54pQ5W5BXMsQ/Mvw1OJCmEYDgY+lrzT+3nNUtoNfXQ==}
     engines: {node: '>= 18'}
 
-  source-map-js@1.2.1:
-    resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
+  source-map-js@1.2.2:
+    resolution: {integrity: sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==}
     engines: {node: '>=0.10.0'}
 
   streamsearch@1.1.0:
@@ -3266,7 +3268,7 @@ snapshots:
     dependencies:
       '@types/node': 20.17.28
 
-  '@typescript/vfs@1.6.1(typescript@5.8.2)':
+  '@typescript/vfs@1.6.1(supports-color@8.1.1)(typescript@5.8.2)':
     dependencies:
       debug: 4.4.0(supports-color@8.1.1)
       typescript: 5.8.2
@@ -3638,7 +3640,7 @@ snapshots:
 
   has-flag@4.0.0: {}
 
-  https-proxy-agent@7.0.6:
+  https-proxy-agent@7.0.6(supports-color@8.1.1):
     dependencies:
       agent-base: 7.1.3
       debug: 4.4.0(supports-color@8.1.1)
@@ -4204,13 +4206,13 @@ snapshots:
     dependencies:
       nanoid: 3.3.11
       picocolors: 1.1.1
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   postcss@8.5.3:
     dependencies:
       nanoid: 3.3.11
       picocolors: 1.1.1
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   prettier-plugin-organize-attributes@1.0.0(prettier@3.5.3):
     dependencies:
@@ -4396,7 +4398,7 @@ snapshots:
 
   smol-toml@1.3.1: {}
 
-  source-map-js@1.2.1: {}
+  source-map-js@1.2.2: {}
 
   streamsearch@1.1.0: {}
 
@@ -4433,22 +4435,22 @@ snapshots:
 
   summary@2.1.0: {}
 
-  supabase@2.20.5:
+  supabase@2.20.5(supports-color@8.1.1):
     dependencies:
       bin-links: 5.0.0
-      https-proxy-agent: 7.0.6
+      https-proxy-agent: 7.0.6(supports-color@8.1.1)
       node-fetch: 3.3.2
       tar: 7.4.3
     transitivePeerDependencies:
       - supports-color
 
-  supazod@1.2.3:
+  supazod@1.2.3(supports-color@8.1.1):
     dependencies:
       case: 1.6.3
       commander: 12.1.0
       prettier: 3.2.5
       slash: 5.1.0
-      ts-to-zod: 3.15.0
+      ts-to-zod: 3.15.0(supports-color@8.1.1)
       typescript: 5.3.3
       zod: 3.24.2
     transitivePeerDependencies:
@@ -4479,7 +4481,7 @@ snapshots:
 
   third-party-capital@1.0.20: {}
 
-  threads@1.7.0:
+  threads@1.7.0(supports-color@8.1.1):
     dependencies:
       callsites: 3.1.0
       debug: 4.4.0(supports-color@8.1.1)
@@ -4507,10 +4509,10 @@ snapshots:
 
   tr46@0.0.3: {}
 
-  ts-to-zod@3.15.0:
+  ts-to-zod@3.15.0(supports-color@8.1.1):
     dependencies:
       '@oclif/core': 4.2.10
-      '@typescript/vfs': 1.6.1(typescript@5.8.2)
+      '@typescript/vfs': 1.6.1(supports-color@8.1.1)(typescript@5.8.2)
       case: 1.6.3
       chokidar: 3.6.0
       fs-extra: 11.3.0
@@ -4520,7 +4522,7 @@ snapshots:
       prettier: 3.0.3
       rxjs: 7.8.2
       slash: 3.0.0
-      threads: 1.7.0
+      threads: 1.7.0(supports-color@8.1.1)
       tslib: 2.8.1
       tsutils: 3.21.0(typescript@5.8.2)
       typescript: 5.8.2
